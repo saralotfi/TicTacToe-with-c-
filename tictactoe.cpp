@@ -1,5 +1,7 @@
 #include <iostream>
+#include <windows.h> 
 using namespace std;
+
 char board[3][3];  
 
 void initializeBoard() {
@@ -63,7 +65,7 @@ void  playTurn() {
         cin >> col;
 
 
-        if (row < 0 || row > 2  |col < 0 || col > 2 ||board[row][col] != '-') {
+        if (row < 0 || row > 2 || col < 0 || col > 2 || board[row][col] != '-') {
             cout << "Invalid input, please re-enter." << endl;
             continue;
         }
@@ -80,6 +82,7 @@ void  playTurn() {
         currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
 
     }
+    system("cls"); 
     draw();
     cout << "It's a draw!" << endl;
 
