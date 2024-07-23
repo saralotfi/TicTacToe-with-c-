@@ -10,7 +10,7 @@ void initializeBoard() {
     }
 }
 
-void printBoard() {
+void draw() {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             cout << board[i][j] << ' ';
@@ -19,7 +19,7 @@ void printBoard() {
     }
 }
 
-bool isBoardFull() {
+bool isFull() {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             if (board[i][j] == '-')
@@ -45,25 +45,25 @@ bool isWin(char player) {
         return true;
     if (board[0][2] == player && board[1][1] == player && board[2][0] == player)
         return true;
-
+    
     return false;
 }
 
-void playGame() {
+void  playTurn() {
     char currentPlayer = 'X';
     int row, col;
-
+    
     initializeBoard();
-
-    while (!isBoardFull()) {
-        printBoard();
+    
+    while (!isFull()) {
+        draw();
         cout << "Player " << currentPlayer << " row? (0-2): ";
         cin >> row;
         cout << "Col? (0-2): ";
         cin >> col;
 
 
-        if (row < 0 || row > 2 || col < 0 || col > 2 || board[row][col] != '-') {
+        if (row < 0 || row > 2  |col < 0 || col > 2 ||board[row][col] != '-') {
             cout << "Invalid input, please re-enter." << endl;
             continue;
         }
@@ -73,18 +73,20 @@ void playGame() {
 
 
         if (isWin(currentPlayer)) {
-            printBoard();
+            draw();
             cout << "Player " << currentPlayer << " wins!" << endl;
             return;
         }
         currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-    }
 
-    printBoard();
+    }
+    draw();
     cout << "It's a draw!" << endl;
+
 }
 
+
 int main() {
-    playGame();
+    playTurn();
     return 0;
 }
