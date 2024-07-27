@@ -128,7 +128,7 @@ private:
             return false;
         }
 
-        if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == '-') {
+        if (isValidMove(row, col)) {
             board[row][col] = currentPlayer;
             return true;
         } else {
@@ -137,12 +137,18 @@ private:
         }
     }
 
-    void clearScreen() {
-            system("cls");
+    bool isValidMove(int row, int col) {
+        if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == '-') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    void clearScreen() {
+        system("cls");
     }
 };
-
 int main() {
     TicTacToe game;
     game.playTurn();
