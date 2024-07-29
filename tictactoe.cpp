@@ -11,6 +11,7 @@ public:
 
     void playTurn() {
         currentPlayer = 'X';
+        int row = 0, col = 0;
         while (!isBoardFull()) {
             draw(); 
 
