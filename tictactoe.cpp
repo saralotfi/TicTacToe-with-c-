@@ -16,7 +16,7 @@ public:
             clearScreen();
             draw(row, col); 
 
-            if (!takePlayerTurn()) {
+            if (!takePlayerTurn(row,col)) {
                 continue;
             }
 
@@ -123,26 +123,26 @@ private:
     }
      bool takePlayerTurn(int &row, int &col) {
         while (true) {
-            int key = _getch(); // دریافت ورودی کلید
-            if (key == 224) { // کلیدهای جهت‌دار
-                key = _getch(); // دریافت کد جهت‌دار
+            int key = _getch(); 
+            if (key == 224) { 
+                key = _getch(); 
                 switch (key) {
-                    case 72: // کلید بالا
-                        row = (row > 0) ? row - 1 : 2; // حرکت مکان‌نما به بالا
+                    case 72:
+                        row = (row > 0) ? row - 1 : 2; 
                         break;
-                    case 80: // کلید پایین
-                        row = (row < 2) ? row + 1 : 0; // حرکت مکان‌نما به پایین
+                    case 80: 
+                        row = (row < 2) ? row + 1 : 0; 
                         break;
-                    case 75: // کلید چپ
-                        col = (col > 0) ? col - 1 : 2; // حرکت مکان‌نما به چپ
+                    case 75: 
+                        col = (col > 0) ? col - 1 : 2; 
                         break;
-                    case 77: // کلید راست
-                        col = (col < 2) ? col + 1 : 0; // حرکت مکان‌نما به راست
+                    case 77: 
+                        col = (col < 2) ? col + 1 : 0; 
                         break;
                 }
-            } else if (key == 13) { // کلید Enter
+            } else if (key == 13) {
                 if (isValidMove(row, col)) {
-                    board[row][col] = currentPlayer; // گذاشتن علامت در خانه انتخاب شده
+                    board[row][col] = currentPlayer; 
                     return true;
                 } else {
                     cout << "Invalid move, please try again." << endl;
@@ -152,28 +152,6 @@ private:
         }
     }
 
-
-    bool takePlayerTurn() {
-        int row, col;
-        cout << currentPlayer << ", row? (0 , 2): ";
-        cin >> row;
-        cout << "col? (0 , 2): ";
-        cin >> col;
-
-        if (!cin) { 
-            cin.clear(); 
-            cout << "Enter valid numbers." << endl;
-            return false;
-        }
-
-        if (isValidMove(row, col)) {
-            board[row][col] = currentPlayer;
-            return true;
-        } else {
-            cout << "Invalid input, please re-enter." << endl;
-            return false; 
-        }
-    }
 
     bool isValidMove(int row, int col) {
         if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == '-') {
