@@ -13,24 +13,26 @@ public:
         currentPlayer = 'X';
         int row = 0, col = 0;
         while (!isBoardFull()) {
-            draw(); 
+            clearScreen();
+            draw(row, col); 
 
             if (!takePlayerTurn()) {
                 continue;
             }
 
             if (isWin(currentPlayer)) {
-                draw();
+                clearScreen();
+                draw(row, col);
                 cout << currentPlayer << " is win!" << endl;
                 return; 
             }
 
-            clearScreen();
             currentPlayer = (currentPlayer == 'X') ? 'O' : 'X'; 
         }
 
-        draw();
-        cout << "It's a draw!" << endl;
+        clearScreen();
+        draw(row, col);
+        cout << "equal" << endl;
     }
 
 private:
@@ -45,16 +47,19 @@ private:
         }
     }
 
-    void draw() {
+ void draw(int cursorRow, int cursorCol) {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
-                cout << board[i][j] << ' ';
+                if (i == cursorRow && j == cursorCol) {
+                    cout << '[' << board[i][j] << "] ";
+                } else {
+                    cout << ' ' << board[i][j] << "  "; 
+                }
             }
             cout << endl;
         }
         cout << endl;
     }
-
     bool isBoardFull() {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
