@@ -121,6 +121,37 @@ private:
     bool isWin(char player) {
         return checkRows(player) || checkColumns(player) || checkDiagonals(player);
     }
+     bool takePlayerTurn(int &row, int &col) {
+        while (true) {
+            int key = _getch(); // دریافت ورودی کلید
+            if (key == 224) { // کلیدهای جهت‌دار
+                key = _getch(); // دریافت کد جهت‌دار
+                switch (key) {
+                    case 72: // کلید بالا
+                        row = (row > 0) ? row - 1 : 2; // حرکت مکان‌نما به بالا
+                        break;
+                    case 80: // کلید پایین
+                        row = (row < 2) ? row + 1 : 0; // حرکت مکان‌نما به پایین
+                        break;
+                    case 75: // کلید چپ
+                        col = (col > 0) ? col - 1 : 2; // حرکت مکان‌نما به چپ
+                        break;
+                    case 77: // کلید راست
+                        col = (col < 2) ? col + 1 : 0; // حرکت مکان‌نما به راست
+                        break;
+                }
+            } else if (key == 13) { // کلید Enter
+                if (isValidMove(row, col)) {
+                    board[row][col] = currentPlayer; // گذاشتن علامت در خانه انتخاب شده
+                    return true;
+                } else {
+                    cout << "Invalid move, please try again." << endl;
+                    return false;
+                }
+            }
+        }
+    }
+
 
     bool takePlayerTurn() {
         int row, col;
