@@ -128,6 +128,13 @@ private:
             row = (row < 2) ? row + 1 : 0; 
         }
     }
+     void moveCursorCol(int &col, int direction) {
+        if (direction == -1) {
+            col = (col > 0) ? col - 1 : 2; 
+        } else {
+            col = (col < 2) ? col + 1 : 0;
+        }
+    }
      bool takePlayerTurn(int &row, int &col) {
         while (true) {
             int key = _getch(); 
