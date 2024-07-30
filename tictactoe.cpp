@@ -3,6 +3,11 @@
 #include <conio.h>
 using namespace std;
 
+const int UP_ARROW = 72;
+const int DOWN_ARROW = 80;
+const int LEFT_ARROW = 75;
+const int RIGHT_ARROW = 77;
+
 class TicTacToe {
 public:
     TicTacToe() {
@@ -141,16 +146,16 @@ private:
             if (key == 224) { 
                 key = _getch(); 
                 switch (key) {
-                    case 72:
+                    case UP_ARROW:
                         moveCursorRow(row, -1);
                         break;
-                    case 80: 
+                    case DOWN_ARROW: 
                         moveCursorRow(row, 1);
                         break;
-                    case 75: 
+                    case LEFT_ARROW: 
                         moveCursorCol(col, -1);
                         break;
-                    case 77:
+                    case RIGHT_ARROW:
                         moveCursorCol(col, 1);
                         break;
                 }
