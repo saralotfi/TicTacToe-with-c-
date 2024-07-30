@@ -177,12 +177,9 @@ private:
      bool isCellEmpty(int row, int col) {
         return (board[row][col] == '-');
      }
-    bool isValidMove(int row, int col) {
-        if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == '-') {
-            return true;
-        } else {
-            return false;
-        }
+    
+     bool isValidMove(int row, int col) {
+        return isInSideTable(row, col) && isCellEmpty(row, col);
     }
 
     void clearScreen() {
