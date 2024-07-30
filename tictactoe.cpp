@@ -148,10 +148,10 @@ private:
                         moveCursorRow(row, 1);
                         break;
                     case 75: 
-                        col = (col > 0) ? col - 1 : 2; 
+                        moveCursorCol(col, -1);
                         break;
-                    case 77: 
-                        col = (col < 2) ? col + 1 : 0; 
+                    case 77:
+                        moveCursorCol(col, 1);
                         break;
                 }
             } else if (key == 13) {
