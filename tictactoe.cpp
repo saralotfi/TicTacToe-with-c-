@@ -171,10 +171,12 @@ private:
         }
     }
 
-     bool insideTheTable(int row, int col) {
+     bool isInSideTable(int row, int col) {
         return (row >= 0 && row < 3 && col >= 0 && col < 3);
     }
-
+     bool isCellEmpty(int row, int col) {
+        return (board[row][col] == '-');
+     }
     bool isValidMove(int row, int col) {
         if (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == '-') {
             return true;
