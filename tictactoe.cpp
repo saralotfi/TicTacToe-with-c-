@@ -121,6 +121,13 @@ private:
     bool isWin(char player) {
         return checkRows(player) || checkColumns(player) || checkDiagonals(player);
     }
+    void moveCursorRow(int &row, int direction) {
+        if (direction == -1) {
+            row = (row > 0) ? row - 1 : 2; 
+        } else {
+            row = (row < 2) ? row + 1 : 0; 
+        }
+    }
      bool takePlayerTurn(int &row, int &col) {
         while (true) {
             int key = _getch(); 
@@ -128,10 +135,10 @@ private:
                 key = _getch(); 
                 switch (key) {
                     case 72:
-                        row = (row > 0) ? row - 1 : 2; 
+                        moveCursorRow(row, -1);
                         break;
                     case 80: 
-                        row = (row < 2) ? row + 1 : 0; 
+                        moveCursorRow(row, 1);
                         break;
                     case 75: 
                         col = (col > 0) ? col - 1 : 2; 
