@@ -140,7 +140,7 @@ private:
             col = (col < 2) ? col + 1 : 0;
         }
     }
-     bool takePlayerTurn(int &row, int &col) {
+     bool PlayerTurn(int &row, int &col) {
         while (true) {
             int key = _getch(); 
             if (key == 224) { 
