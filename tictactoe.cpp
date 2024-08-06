@@ -45,8 +45,8 @@ private:
     char currentPlayer;
 
     void initializeBoard() {
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
+        for (int i = 0; i < 3;i++) {
+            for (int j = 0; j < 3;j++) {
                 board[i][j] = '-'; 
             }
         }
@@ -158,6 +158,7 @@ private:
                     case RIGHT_ARROW:
                         moveCursorCol(col, 1);
                         break;
+
                 }
             } else if (key == 13) {
                 if (isValidMove(row, col)) {
@@ -168,6 +169,8 @@ private:
                     return false;
                 }
             }
+                clearScreen();
+                draw(row, col);
         }
     }
 
@@ -185,7 +188,7 @@ private:
     void clearScreen() {
         system("cls");
     }
-};
+ };
 int main() {
     TicTacToe game;
     game.playTurn();
