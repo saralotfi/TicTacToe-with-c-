@@ -21,7 +21,7 @@ public:
             clearScreen();
             draw(row, col); 
 
-            if (!takePlayerTurn(row,col)) {
+            if (!PlayerTurn(row,col)) {
                 continue;
             }
 
@@ -140,39 +140,44 @@ private:
             col = (col < 2) ? col + 1 : 0;
         }
     }
-     bool PlayerTurn(int &row, int &col) {
-        while (true) {
-            int key = _getch(); 
-            if (key == 224) { 
-                key = _getch(); 
+     bool PlayerTurn(int& row, int& col) {
+    while (true) {
+        if (_kbhit()) { 
+            int key = _getch();
+            cout << "Key pressed: " << key << endl;
+            if (key == 224) {
+                key = _getch();
+                cout << "Arrow key detected: " << key << endl;
                 switch (key) {
                     case UP_ARROW:
                         moveCursorRow(row, -1);
                         break;
-                    case DOWN_ARROW: 
+                    case DOWN_ARROW:
                         moveCursorRow(row, 1);
                         break;
-                    case LEFT_ARROW: 
+                    case LEFT_ARROW:
                         moveCursorCol(col, -1);
                         break;
                     case RIGHT_ARROW:
                         moveCursorCol(col, 1);
                         break;
-
                 }
-            } else if (key == 13) {
+            } else if (key == 13) { 
+                cout << "Enter key pressed. Checking move validity..." << endl;
                 if (isValidMove(row, col)) {
-                    board[row][col] = currentPlayer; 
+                    board[row][col] = currentPlayer;
+                    cout << "Move made at (" << row << ", " << col << ") by " << currentPlayer << endl;
                     return true;
                 } else {
-                    cout << "Invalid move, please try again." << endl;
+                    cout << "Invalid move at (" << row << ", " << col << "). Please try again." << endl;
                     return false;
                 }
             }
-                clearScreen();
-                draw(row, col);
+            clearScreen();
+            draw(row, col);
         }
     }
+}
 
      bool isInSideTable(int row, int col) {
         return (row >= 0 && row < 3 && col >= 0 && col < 3);
@@ -191,10 +196,9 @@ private:
  };
 int main() {
     TicTacToe game;
-    game.playTurn();
+    game.playGame();
     return 0;
 }
-
 
 
 
