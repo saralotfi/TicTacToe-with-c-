@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <conio.h>
 using namespace std;
+HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 const int UP_ARROW = 72;
 const int DOWN_ARROW = 80;
@@ -17,18 +18,21 @@ public:
     void playGame() {
         currentPlayer = 'X';
         int row = 0, col = 0;
-        while (!isBoardFull()) {
+        bool gameWon = false;
+        while (!isBoardFull& !gameWon()) {
             clearScreen();
-            draw(row, col); 
+            draw(row, col,gameWon); 
 
             if (!PlayerTurn(row,col)) {
                 continue;
             }
 
             if (isWin(currentPlayer)) {
+                gameWon = true;
                 clearScreen();
                 draw(row, col);
                 cout << currentPlayer << " is win!" << endl;
+                
                 return; 
             }
 
@@ -36,9 +40,16 @@ public:
         }
 
         clearScreen();
-        draw(row, col);
+        draw(row, col,gameWon);
         cout << "equal" << endl;
     }
+
+    if (!gameWon) {
+        clearScreen();
+        drawBoard(row, col, gameWon);
+        cout << "equal" << endl;
+        }
+}
 
 private:
     char board[3][3];
@@ -52,18 +63,8 @@ private:
         }
     }
 
- void draw(int cursorRow, int cursorCol) {
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                if (i == cursorRow && j == cursorCol) {
-                    cout << '[' << currentPlayer << "] ";
-                } else {
-                    cout << ' ' << board[i][j] << "  "; 
-                }
-            }
-            cout << endl;
-        }
-        cout << endl;
+     void drawCell(int i, int j) {
+        cout << ' ' << board[i][j] << ' ';
     }
     bool isBoardFull() {
         for (int i = 0; i < 3; ++i) {
