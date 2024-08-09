@@ -66,6 +66,19 @@ private:
      void drawCell(int i, int j) {
         cout << ' ' << board[i][j] << ' ';
     }
+
+    void drawBoard(int cursorRow, int cursorCol, bool gameWon) {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
+                setColorForCell(i, j, cursorRow, cursorCol, gameWon);
+                drawCell(i, j);
+            }
+            cout << endl;
+        }
+
+        resetColor();
+        cout << endl;
+    }
     bool isBoardFull() {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
