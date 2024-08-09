@@ -75,6 +75,15 @@ private:
             }
             cout << endl;
         }
+        void setColorForCell(int i, int j, int cursorRow, int cursorCol, bool gameWon) {
+        if (gameWon && isWinCell(i, j)) {
+            SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+        } else if (gameWon && board[i][j] != '-' && !isWinCell(i, j)) {ه
+            SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_INTENSITY);
+        } else  (i == cursorRow && j == cursorCol) {
+            SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+        } 
+    }
 
         resetColor();
         cout << endl;
