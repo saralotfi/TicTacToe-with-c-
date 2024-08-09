@@ -56,7 +56,7 @@ private:
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
                 if (i == cursorRow && j == cursorCol) {
-                    cout << '[' << board[i][j] << "] ";
+                    cout << '[' << currentPlayer << "] ";
                 } else {
                     cout << ' ' << board[i][j] << "  "; 
                 }
@@ -140,7 +140,7 @@ private:
             col = (col < 2) ? col + 1 : 0;
         }
     }
-     bool PlayerTurn(int& row, int& col) {
+    bool PlayerTurn(int& row, int& col) {
     while (true) {
         if (_kbhit()) { 
             int key = _getch();
