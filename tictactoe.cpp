@@ -1,7 +1,13 @@
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
+#include <fstream>
+#include <ctime>
+#include <chrono>
+
 using namespace std;
+using namespace std::chrono;
+
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 const int UP_ARROW = 72;
@@ -16,6 +22,7 @@ public:
     }
 
     void playGame() {
+        auto startTime = high_resolution_clock::now(); // ثبت زمان شروع بازی
         currentPlayer = 'X';
         int row = 0, col = 0;
         bool gameWon = false;
@@ -23,6 +30,7 @@ public:
         while (!isBoardFull() && !gameWon) {
             clearScreen();
             drawBoard(row, col, gameWon);
+            displayMenuHint();
 
             if (!PlayerTurn(row, col)) {
                 continue;
@@ -33,16 +41,18 @@ public:
                 clearScreen();
                 drawBoard(row, col, gameWon);
                 cout << currentPlayer << " wins!" << endl;
-                return; 
+                saveGameHistory(std::string(1, currentPlayer) + " wins", startTime);
+                return;
             }
 
-            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X'; 
+            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
         }
 
         if (!gameWon) {
             clearScreen();
             drawBoard(row, col, gameWon);
             cout << "It's a draw!" << endl;
+            saveGameHistory("Draw", startTime);
         }
     }
 
@@ -54,7 +64,7 @@ private:
     void initializeBoard() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                board[i][j] = '-'; 
+                board[i][j] = '-';
             }
         }
     }
@@ -100,11 +110,11 @@ private:
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
                 if (board[i][j] == '-') {
-                    return false; 
+                    return false;
                 }
             }
         }
-        return true; 
+        return true;
     }
 
     bool allEqual(const char arr[], char player) {
@@ -193,15 +203,15 @@ private:
 
     void moveCursorRow(int &row, int direction) {
         if (direction == -1) {
-            row = (row > 0) ? row - 1 : 2; 
+            row = (row > 0) ? row - 1 : 2;
         } else {
-            row = (row < 2) ? row + 1 : 0; 
+            row = (row < 2) ? row + 1 : 0;
         }
     }
 
     void moveCursorCol(int &col, int direction) {
         if (direction == -1) {
-            col = (col > 0) ? col - 1 : 2; 
+            col = (col > 0) ? col - 1 : 2;
         } else {
             col = (col < 2) ? col + 1 : 0;
         }
@@ -209,10 +219,18 @@ private:
 
     bool PlayerTurn(int& row, int& col) {
         while (true) {
-            if (_kbhit()) { 
+            if (_kbhit()) {
                 int key = _getch();
                 cout << "Key pressed: " << key << endl;
-                if (key == 224) {
+
+                if (key == 'm') {
+                    cout << "Menu key 'm' pressed" << endl;
+                    showMenu();
+                    clearScreen();
+                    drawBoard(row, col, false);
+                    displayMenuHint();
+                    continue;
+                } else if (key == 224) {
                     key = _getch();
                     cout << "Arrow key detected: " << key << endl;
                     switch (key) {
@@ -229,7 +247,7 @@ private:
                             moveCursorCol(col, 1);
                             break;
                     }
-                } else if (key == 13) { 
+                } else if (key == 13) {
                     cout << "Enter key pressed. Checking move validity..." << endl;
                     if (isValidMove(row, col)) {
                         board[row][col] = currentPlayer;
@@ -242,8 +260,57 @@ private:
                 }
                 clearScreen();
                 drawBoard(row, col, false);
+                displayMenuHint();
             }
         }
+    }
+
+    void showMenu() {
+        int selectedOption = 0;
+        const char* menuItems[3] = {"Exit", "Continue", "History"};
+        int lastSelectedOption = -1;
+
+        while (true) {
+            if (selectedOption != lastSelectedOption) {
+                clearScreen();
+                lastSelectedOption = selectedOption;
+                cout << "Menu:" << endl;
+
+                for (int i = 0; i < 3; ++i) {
+                    if (i == selectedOption) {
+                        SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+                        cout << "> " << menuItems[i] << endl;
+                        resetColor();
+                    } else {
+                        cout << "  " << menuItems[i] << endl;
+                    }
+                }
+            }
+
+            if (_kbhit()) {
+                int key = _getch();
+                if (key == 224) {
+                    key = _getch();
+                    if (key == UP_ARROW) {
+                        selectedOption = (selectedOption > 0) ? selectedOption - 1 : 2;
+                    } else if (key == DOWN_ARROW) {
+                        selectedOption = (selectedOption < 2) ? selectedOption + 1 : 0;
+                    }
+                } else if (key == 13) {
+                    if (selectedOption == 0) {
+                        exit(0);
+                    } else if (selectedOption == 1) {
+                        return;
+                    } else if (selectedOption == 2) {
+                        showHistory();
+                    }
+                }
+            }
+        }
+    }
+
+    void displayMenuHint() {
+        cout << "Press 'm' for menu." << endl;
     }
 
     bool isInSideTable(int row, int col) {
@@ -253,13 +320,46 @@ private:
     bool isCellEmpty(int row, int col) {
         return (board[row][col] == '-');
     }
-    
+
     bool isValidMove(int row, int col) {
         return isInSideTable(row, col) && isCellEmpty(row, col);
     }
 
     void clearScreen() {
         system("cls");
+    }
+
+    void saveGameHistory(const string& result, high_resolution_clock::time_point startTime) {
+        ofstream historyFile("game_history.txt", ios::app);
+        if (historyFile.is_open()) {
+            auto endTime = high_resolution_clock::now();
+            auto duration = duration_cast<seconds>(endTime - startTime).count();
+            time_t now = time(0);
+            char* dt = ctime(&now);
+            historyFile << "Game Result: " << result << ", Duration: " << duration << " seconds at " << dt;
+            historyFile.close();
+        }
+    }
+
+    void showHistory() {
+        ifstream historyFile("game_history.txt");
+        if (historyFile.is_open()) {
+            string line;
+            clearScreen();
+            cout << "Game History:" << endl;
+            while (getline(historyFile, line)) {
+                cout << line << endl;
+            }
+            historyFile.close();
+            cout << endl << "Use the arrow keys to go to the menu";
+            _getch(); 
+            clearScreen();
+        } else {
+            cout << "No history available." << endl;
+            cout << "";
+            _getch(); 
+            clearScreen();
+        }
     }
 };
 
@@ -268,6 +368,10 @@ int main() {
     game.playGame();
     return 0;
 }
+
+
+
+
 
 
 
