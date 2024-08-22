@@ -354,7 +354,8 @@ private:
             cout << endl << "Use the arrow keys to go to the menu";
             _getch(); 
             clearScreen();
-        } else {
+        } 
+        else {
             cout << "No history available." << endl;
             cout << "";
             _getch(); 
